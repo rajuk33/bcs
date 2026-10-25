@@ -1,0 +1,114 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile information synchronized with Google Authentication",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "description": "User email address" },
+        "displayName": { "type": "string", "description": "Candidate display name" },
+        "photoURL": { "type": "string", "description": "Profile picture URL" },
+        "createdAt": { "type": "string", "description": "Account creation timestamp" },
+        "updatedAt": { "type": "string", "description": "Last profile update timestamp" }
+      },
+      "required": ["uid", "email"]
+    },
+    "UserSettings": {
+      "title": "UserSettings",
+      "description": "User preferences including theme, color mode, exam mode and candidate settings",
+      "type": "object",
+      "properties": {
+        "theme": { "type": "string", "enum": ["emerald", "indigo", "crimson"], "description": "Selected color palette theme" },
+        "colorMode": { "type": "string", "enum": ["light", "dark"], "description": "Light or Dark UI mode" },
+        "examDisplayMode": { "type": "string", "enum": ["continuous", "jam"], "description": "Continuous 100-question view or Vocabulary Jam one-by-one mode" },
+        "candidateName": { "type": "string", "maxLength": 100, "description": "Candidate full name" },
+        "preferredLanguage": { "type": "string", "enum": ["bn", "en"], "description": "UI language" },
+        "autoSubmitOnTimeUp": { "type": "boolean", "description": "Whether to auto-submit when timer expires" },
+        "updatedAt": { "type": "string", "description": "Last updated timestamp" }
+      },
+      "required": ["theme", "colorMode"]
+    },
+    "ExamHistoryRecord": {
+      "title": "ExamHistoryRecord",
+      "description": "Saved past exam result and detailed subject breakdown",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique result ID" },
+        "userId": { "type": "string", "description": "Owner user UID" },
+        "candidateName": { "type": "string", "description": "Candidate name" },
+        "date": { "type": "string", "description": "Formatted exam date" },
+        "timestamp": { "type": "number", "description": "Unix timestamp in ms" },
+        "mode": { "type": "string", "description": "Full or subject exam" },
+        "subjectName": { "type": "string", "description": "Subject title if subject test" },
+        "totalQuestions": { "type": "number", "description": "Total question count" },
+        "attemptedCount": { "type": "number", "description": "Attempted count" },
+        "correctCount": { "type": "number", "description": "Correct count" },
+        "incorrectCount": { "type": "number", "description": "Incorrect count" },
+        "skippedCount": { "type": "number", "description": "Skipped count" },
+        "totalMarks": { "type": "number", "description": "Final score after negative marking" },
+        "negativePenalty": { "type": "number", "description": "Negative mark deducted" },
+        "percentage": { "type": "number", "description": "Percentage score" },
+        "timeSpentSeconds": { "type": "number", "description": "Total duration used in seconds" },
+        "totalAllocatedSeconds": { "type": "number", "description": "Allocated seconds" },
+        "aiAnalysis": { "type": "string", "description": "Gemini AI diagnostic analysis text" }
+      },
+      "required": ["id", "userId", "totalMarks", "timestamp"]
+    },
+    "ActiveExamSession": {
+      "title": "ActiveExamSession",
+      "description": "Current in-progress exam session synchronized for multi-device resume",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Session ID" },
+        "userId": { "type": "string", "description": "Owner user UID" },
+        "startTime": { "type": "number", "description": "Start timestamp in ms" },
+        "timeRemainingSeconds": { "type": "number", "description": "Remaining seconds" },
+        "isCompleted": { "type": "boolean", "description": "Completion state" },
+        "selectedAnswersCount": { "type": "number", "description": "Count of answered questions" },
+        "updatedAt": { "type": "string", "description": "Last save timestamp" }
+      },
+      "required": ["id", "userId", "timeRemainingSeconds"]
+    },
+    "QuestionBankItem": {
+      "title": "QuestionBankItem",
+      "description": "Shared BCS question bank item enriched by Gemini AI and saved to Firebase",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique question identifier" },
+        "question": { "type": "string", "description": "Question statement" },
+        "options": { "type": "array", "description": "4 multiple choice options" },
+        "correctAnswer": { "type": "number", "description": "Zero-indexed correct answer (0-3)" },
+        "subjectId": { "type": "string", "description": "BCS Subject ID" },
+        "subject": { "type": "string", "description": "Subject title" },
+        "explanation": { "type": "string", "description": "Detailed explanation" },
+        "reference": { "type": "string", "description": "Authentic source citation" },
+        "createdBy": { "type": "string", "description": "User UID who was logged in when enriched" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" }
+      },
+      "required": ["id", "question", "options", "correctAnswer", "subjectId"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile document accessible only by the authenticated owner"
+    },
+    "/users/{userId}/settings/{settingId}": {
+      "schema": "UserSettings",
+      "description": "User preference settings such as theme and color mode"
+    },
+    "/users/{userId}/exam_history/{examId}": {
+      "schema": "ExamHistoryRecord",
+      "description": "Historical BCS test scores and performance analysis"
+    },
+    "/users/{userId}/active_session/{sessionId}": {
+      "schema": "ActiveExamSession",
+      "description": "Live in-progress exam session state"
+    },
+    "/question_bank/{questionId}": {
+      "schema": "QuestionBankItem",
+      "description": "Crowdsourced and AI-enriched BCS question bank accessible to authenticated candidates"
+    }
+  }
+}

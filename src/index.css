@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@layer base {
+  /* Font fallbacks: Aptos for Latin/English, Hind Siliguri for Bengali */
+  @font-face {
+    font-family: 'Aptos';
+    src: local('Aptos'), local('Segoe UI'), local('Calibri');
+    font-display: swap;
+  }
+
+  body {
+    font-family: 'Aptos', 'Hind Siliguri', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  }
+}
+
+/* Explicit language typography classes */
+.font-bangla {
+  font-family: 'Hind Siliguri', system-ui, sans-serif !important;
+}
+
+.font-english {
+  font-family: 'Aptos', 'Segoe UI', system-ui, -apple-system, sans-serif !important;
+}
+
+/* Custom smooth scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Animation for Vocabulary Jam Mode */
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.96) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-jam-card {
+  animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes streakPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+.animate-streak {
+  animation: streakPulse 0.4s ease-in-out;
+}

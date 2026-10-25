@@ -1,0 +1,6 @@
+{
+  "name": "BCS Prili Mock Test | বিসিএস প্রিলিমিনারি মডেল টেস্ট",
+  "description": "বিসিএস প্রিলিমিনারি পরীক্ষার জন্য ১০০ নম্বরের পূর্ণাঙ্গ ও বিষয়ভিত্তিক মডেল টেস্ট, নেগেটিভ মার্কিং (-০.৫), ইনস্ট্যান্ট অ্যানালাইসিস এবং জেমিনি এআই প্রশ্নব্যাংক।",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

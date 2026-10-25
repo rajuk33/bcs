@@ -1,0 +1,51 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default-deny global safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Validation primitives
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Connection validation document
+    match /test/{docId} {
+      allow read: if true;
+    }
+
+    // User profile and subcollections
+    match /users/{userId} {
+      allow get, create, update, delete: if isOwner(userId);
+
+      // User preference settings (theme, light/dark mode, defaults)
+      match /settings/{settingId} {
+        allow get, list, create, update, delete: if isOwner(userId);
+      }
+
+      // Exam history records
+      match /exam_history/{examId} {
+        allow get, list, create, update, delete: if isOwner(userId);
+      }
+
+      // Live in-progress session
+      match /active_session/{sessionId} {
+        allow get, list, create, update, delete: if isOwner(userId);
+      }
+    }
+
+    // Shared Question Bank enriched by Gemini AI and saved to Firebase
+    match /question_bank/{questionId} {
+      allow get, list: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update, delete: if false;
+    }
+  }
+}
